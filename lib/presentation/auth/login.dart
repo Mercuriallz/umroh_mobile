@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_umroh/bloc/auth/login/login_bloc.dart';
 import 'package:mobile_umroh/model/auth/login/login_request_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -94,14 +95,15 @@ class _LoginPageState extends State<LoginPage> {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: () {
+                            onPressed: () async {
+                              SharedPreferences prefs = await SharedPreferences.getInstance();
+                              prefs.setBool("login", true);
                               final data = LoginRequestModel(
                                 email: emailController.text,
                                 password: passwordController.text,
                               );
                               context.read<LoginBloc>().login(formData: data);
-                              print("email : ${emailController.text}");
-                              print("password: ${passwordController.text}");
+                            
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blue,
