@@ -24,9 +24,9 @@ class AddInformationPage extends StatefulWidget {
 }
 
 class _AddInformationPageState extends State<AddInformationPage> {
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController nikController = TextEditingController();
+  final nameController = TextEditingController();
+  final addressController = TextEditingController();
+  final phoneNumberController = TextEditingController();
 
   String? selectedProvince;
   String? selectedRegency;
@@ -35,26 +35,26 @@ class _AddInformationPageState extends State<AddInformationPage> {
 
   bool get isFormValid {
     return nameController.text.isNotEmpty &&
-        emailController.text.isNotEmpty &&
-        nikController.text.isNotEmpty &&
         selectedProvince != null &&
-        selectedRegency != null;
+        selectedRegency != null &&
+        selectedDistrict != null &&
+        selectedSubDistrict != null;
   }
 
   @override
   void initState() {
     super.initState();
     nameController.addListener(() => setState(() {}));
-    emailController.addListener(() => setState(() {}));
-    nikController.addListener(() => setState(() {}));
+    // emailController.addListener(() => setState(() {}));
+    // nikController.addListener(() => setState(() {}));
     context.read<ProvinsiBloc>().getProvinsi();
   }
 
   @override
   void dispose() {
     nameController.dispose();
-    emailController.dispose();
-    nikController.dispose();
+    // emailController.dispose();
+    // nikController.dispose();
     super.dispose();
   }
 
@@ -68,43 +68,47 @@ class _AddInformationPageState extends State<AddInformationPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Informasi Tambahan"),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Tambahkan Informasi",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold)),
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 20),
-                buildTextField("Nama", "Masukkan nama Anda", nameController),
+
                 const SizedBox(height: 12),
-                buildTextField("NIK", "Masukkan NIK Anda", nikController),
-                const SizedBox(height: 12),
+
+                // Dropdown Provinsi
                 Text("PILIH PROVINSI"),
                 BlocBuilder<ProvinsiBloc, ProvinsiState>(
                   builder: (context, state) {
-                    debugPrint("Provinsi state: $state");
                     if (state is ProvinsiLoaded) {
                       return FormBuilderDropdown(
                         name: 'provinsiDropdown',
-                        decoration: InputDecoration(
-                          labelText: '',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                        ),
+                        decoration: _dropdownDecoration(),
                         hint: const Text('Pilih Provinsi'),
-                        items: state.provinsi
-                            .map((provinsi) => DropdownMenuItem(
-                                  value: provinsi.provinsiId.toString(),
-                                  child: Text(provinsi.name.toString()),
-                                ))
-                            .toList(),
+                        items: state.provinsi.map((provinsi) {
+                          return DropdownMenuItem(
+                            value: provinsi.provinsiId.toString(),
+                            child: Text(provinsi.name.toString()),
+                          );
+                        }).toList(),
                         onChanged: (value) {
-                          debugPrint("Selected regency: $value");
                           setState(() {
-                            selectedRegency = value.toString();
-                            selectedDistrict = null; // Reset kecamatan
-                            debugPrint(
-                                "Fetching kecamatan for regency: $selectedRegency");
-                            context
-                                .read<KabupatenBloc>()
-                                .getKabupaten(selectedRegency!);
+                            selectedProvince = value.toString();
+                            selectedRegency = null;
+                            selectedDistrict = null;
+                            selectedSubDistrict = null;
                           });
+                          context
+                              .read<KabupatenBloc>()
+                              .getKabupaten(selectedProvince!);
                         },
                       );
                     } else if (state is ProvinsiLoading) {
@@ -114,78 +118,65 @@ class _AddInformationPageState extends State<AddInformationPage> {
                     }
                   },
                 ),
+
                 const SizedBox(height: 12),
-                Text("PILIH Kabupaten"),
+
+                // Dropdown Kabupaten
+                Text("PILIH KABUPATEN"),
                 BlocBuilder<KabupatenBloc, KabupatenState>(
                   builder: (context, state) {
-                    debugPrint("kabupaten state: $state");
                     if (state is KabupatenLoaded) {
                       return FormBuilderDropdown(
                         name: 'kabupatenDropdown',
-                        decoration: InputDecoration(
-                          labelText: '',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                        ),
+                        decoration: _dropdownDecoration(),
+                        hint: const Text('Pilih Kabupaten'),
+                        items: state.kabupaten.map((kabupaten) {
+                          return DropdownMenuItem(
+                            value: kabupaten.kabupatenId.toString(),
+                            child: Text(kabupaten.name.toString()),
+                          );
+                        }).toList(),
                         onChanged: (value) {
-                          debugPrint("Selected regency: $value");
                           setState(() {
                             selectedRegency = value.toString();
-                            selectedDistrict = null; // Reset kecamatan
-                            debugPrint(
-                                "Fetching kecamatan for regency: $selectedRegency");
-                            context
-                                .read<KecamatanBloc>()
-                                .getKecamatan(selectedRegency!);
+                            selectedDistrict = null;
+                            selectedSubDistrict = null;
                           });
+                          context
+                              .read<KecamatanBloc>()
+                              .getKecamatan(selectedRegency!);
                         },
-                        hint: const Text('Pilih Kabupaten'),
-                        items: state.kabupaten
-                            .map((kabupaten) => DropdownMenuItem(
-                                  value: kabupaten.kabupatenId.toString(),
-                                  child: Text(kabupaten.name.toString()),
-                                ))
-                            .toList(),
                       );
                     } else if (state is KabupatenLoading) {
                       return CircularProgressIndicator();
                     } else {
-                      return const Text("Gagal memuat data kabupaten");
+                      return const Text("Pilih Provinsi terlebih dahulu");
                     }
                   },
                 ),
+
                 const SizedBox(height: 12),
+
+                // Dropdown Kecamatan
                 Text("PILIH KECAMATAN"),
                 BlocBuilder<KecamatanBloc, KecamatanState>(
                   builder: (context, state) {
-                    debugPrint("kecamatan state: $state");
                     if (state is KecamatanLoaded) {
                       return FormBuilderDropdown(
                         name: 'kecamatanDropdown',
-                        decoration: InputDecoration(
-                          labelText: '',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                        ),
+                        decoration: _dropdownDecoration(),
                         hint: const Text('Pilih Kecamatan'),
-                        items: state.kecamatan
-                            .map((kecamatan) => DropdownMenuItem(
-                                  value: kecamatan.kecamatanId.toString(),
-                                  child: Text(kecamatan.name.toString()),
-                                ))
-                            .toList(),
+                        items: state.kecamatan.map((kecamatan) {
+                          return DropdownMenuItem(
+                            value: kecamatan.kecamatanId.toString(),
+                            child: Text(kecamatan.name.toString()),
+                          );
+                        }).toList(),
                         onChanged: (value) {
-                          debugPrint("Selected district: $value");
                           setState(() {
                             selectedDistrict = value.toString();
-                            selectedSubDistrict = null; // Reset kelurahan
+                            selectedSubDistrict = null;
                           });
-
-                          // Panggil Bloc untuk memuat kelurahan
-                          debugPrint(
-                              "Fetching kelurahan for district: $selectedDistrict");
                           context
                               .read<KelurahanBloc>()
                               .getKelurahan(selectedDistrict!);
@@ -194,50 +185,72 @@ class _AddInformationPageState extends State<AddInformationPage> {
                     } else if (state is KecamatanLoading) {
                       return CircularProgressIndicator();
                     } else {
-                      return const Text("Gagal memuat data kecamatan");
+                      return const Text("Pilih Kabupaten Terlebih Dahulu");
                     }
                   },
                 ),
-                const SizedBox(
-                  height: 12,
-                ),
+
+                const SizedBox(height: 12),
+
+                // Dropdown Kelurahan
                 Text("PILIH KELURAHAN"),
                 BlocBuilder<KelurahanBloc, KelurahanState>(
                   builder: (context, state) {
-                    debugPrint("kelurahan state: $state");
                     if (state is KelurahanLoaded) {
                       return FormBuilderDropdown(
                         name: 'kelurahanDropdown',
-                        decoration: InputDecoration(
-                          labelText: '',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                        ),
+                        decoration: _dropdownDecoration(),
                         hint: const Text('Pilih Kelurahan'),
-                        items: state.kelurahan
-                            .map((kelurahan) => DropdownMenuItem(
-                                  value: kelurahan.kelurahanId.toString(),
-                                  child: Text(kelurahan.name.toString()),
-                                ))
-                            .toList(),
+                        items: state.kelurahan.map((kelurahan) {
+                          return DropdownMenuItem(
+                            value: kelurahan.kelurahanId.toString(),
+                            child: Text(kelurahan.name.toString()),
+                          );
+                        }).toList(),
                         onChanged: (value) {
-                          debugPrint("Selected kelurahan: $value");
                           setState(() {
                             selectedSubDistrict = value.toString();
                           });
                         },
                       );
                     } else if (state is KelurahanLoading) {
-                      return const CircularProgressIndicator();
+                      return CircularProgressIndicator();
                     } else {
-                      return const Text("Gagal memuat data kelurahan");
+                      return const Text("Pilih Kecamatan terlebih dahulu");
                     }
                   },
                 ),
+
+                const SizedBox(
+                  height: 12,
+                ),
+                Text("Alamat"),
+                const SizedBox(
+                  height: 8,
+                ),
                 buildTextField(
-                    "Email", "Masukkan alamat email Anda", emailController),
+                    "Alamat", "Masukkan alamat Anda", addressController),
+                const SizedBox(
+                  height: 12,
+                ),
+                Text("NAMA KADES"),
+                const SizedBox(
+                  height: 8,
+                ),
+                buildTextField(
+                    "Nama Kades", "Masukkan Nama Kades", nameController),
+                const SizedBox(
+                  height: 12,
+                ),
+                Text("No. HP"),
+                const SizedBox(
+                  height: 8,
+                ),
+                buildTextField("Nomor Telepon", "Masukkan No.Hp Anda",
+                    phoneNumberController),
                 const SizedBox(height: 20),
+
+                // Tombol Selanjutnya
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -246,8 +259,8 @@ class _AddInformationPageState extends State<AddInformationPage> {
                             debugPrint("Submitting form");
                             final formData = {
                               'name': nameController.text,
-                              'email': emailController.text,
-                              'nik': nikController.text,
+                              // 'email': emailController.text,
+                              // 'nik': nikController.text,
                               'province': selectedProvince!,
                               'regency': selectedRegency!,
                             };
@@ -268,21 +281,10 @@ class _AddInformationPageState extends State<AddInformationPage> {
                           }
                         : null,
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      backgroundColor:
-                          isFormValid ? const Color(0xFFC81127) : Colors.grey,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
+                      backgroundColor: isFormValid ? Colors.red : Colors.grey,
                     ),
-                    child: Text(
-                      widget.existingMembers.isEmpty
-                          ? "Selanjutnya"
-                          : "Tambah Anggota",
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500),
-                    ),
+                    child: const Text("Selanjutnya",
+                        style: TextStyle(color: Colors.white)),
                   ),
                 ),
               ],
@@ -294,25 +296,21 @@ class _AddInformationPageState extends State<AddInformationPage> {
   }
 }
 
+// Fungsi untuk TextField
 Widget buildTextField(
     String label, String hint, TextEditingController controller) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(label,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-      const SizedBox(height: 6),
-      TextField(
-        controller: controller,
-        decoration: InputDecoration(
-          hintText: hint,
-          filled: true,
-          fillColor: Colors.grey.shade100,
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide.none),
-        ),
-      ),
-    ],
+  return TextField(
+    controller: controller,
+    decoration: InputDecoration(
+      labelText: label,
+      hintText: hint,
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+    ),
+  );
+}
+
+InputDecoration _dropdownDecoration() {
+  return InputDecoration(
+    border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
   );
 }

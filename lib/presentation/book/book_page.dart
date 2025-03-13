@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mobile_umroh/model/package/package_model.dart';
 import 'package:mobile_umroh/presentation/book/add_information_page.dart';
-
 
 class BookingJemaahPage extends StatefulWidget {
   final Map<String, String> mainMember;
   final List<Map<String, String>> members;
   final DataPackage package;
-
 
   const BookingJemaahPage({
     super.key,
@@ -32,20 +31,20 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
 
   bool get isFormValid => dateController.text.isNotEmpty && jemaahList.isNotEmpty;
 
-  // Future<void> _selectDate() async {
-  //   DateTime? pickedDate = await showDatePicker(
-  //     context: context,
-  //     initialDate: DateTime.now(),
-  //     firstDate: DateTime.now(),
-  //     lastDate: DateTime(2100),
-  //   );
+  Future<void> _selectDate() async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2100),
+    );
 
-  //   if (pickedDate != null) {
-  //     setState(() {
-  //       dateController.text = DateFormat('dd/MM/yyyy').format(pickedDate);
-  //     });
-  //   }
-  // }
+    if (pickedDate != null) {
+      setState(() {
+        dateController.text = DateFormat('dd/MM/yyyy').format(pickedDate);
+      });
+    }
+  }
 
   void _addJemaah() async {
     final newMember = await Navigator.push<Map<String, String>>(
@@ -74,245 +73,242 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Form Pemesanan',
-          style: TextStyle(color: Colors.white)
-        ),
-        backgroundColor: const Color(0xFFC81127),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Paket Haji Card
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-               
-              ),
-              child: Row(
-                children: [
-                  // ClipRRect(
-                  //   borderRadius: BorderRadius.circular(8),
-                  //   child: Image.asset(
-                  //     "assets/images/kabah.png",
-                  //     width: 70,
-                  //     height: 70,
-                  //     fit: BoxFit.cover,
-                  //   ),
-                  // ),
-                  // const SizedBox(width: 12),
-                   Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.package.namaPaket!,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600
-                          )
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          widget.package.harga ?? "",
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.red
-                          )
-                        ),
-                        SizedBox(height: 4),
-                        // Row(
-                        //   children: [
-                        //     Icon(Icons.remove_red_eye, size: 14, color: Colors.grey),
-                        //     SizedBox(width: 4),
-                        //     Text("${widget.package['views']} views", style: TextStyle(fontSize: 12, color: Colors.grey)),
-                        //   ],
-                        // ),
-                      ],
-                    ),
-                  ),
-                ],
+      body: Stack(
+        children: [
+          // Background Image
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/images/haji_background.png"),
+                fit: BoxFit.cover,
               ),
             ),
-            const SizedBox(height: 20),
-
-            buildTextField(
-              "Tanggal Keberangkatan",
-              "DD/MM/YYYY",
-              dateController,
-              readOnly: true,
-              // onTap: _selectDate,
-            ),
-            const SizedBox(height: 16),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          ),
+          
+          // Overlay to darken the background image (optional)
+         
+          // Main Content
+          SafeArea(
+            child: Column(
               children: [
-                const Text(
-                  "Jumlah Jema'ah",
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)
-                ),
-                Text(
-                  "${jemaahList.length}",
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: jemaahList.length,
-              itemBuilder: (context, index) {
-                final jemaah = jemaahList[index];
-                return Card(
-                  margin: const EdgeInsets.only(bottom: 8),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: ExpansionTile(
-                    title: Text(
-                      jemaah["name"] ?? '',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500
-                      ),
-                    ),
-                    subtitle: Text(
-                      "NIK: ${jemaah["nik"]}",
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey
-                      ),
-                    ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.close, color: Colors.red),
-                          onPressed: () => removeJemaah(index),
-                        ),
-                      ],
-                    ),
+                // Custom App Bar
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Row(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          children: [
-                            _buildDetailRow("Email", jemaah["email"] ?? ''),
-                            _buildDetailRow("Provinsi", jemaah["province"] ?? ''),
-                            _buildDetailRow("Kabupaten", jemaah["regency"] ?? ''),
-                            _buildDetailRow("Kecamatan", jemaah["district"] ?? ''),
-                            _buildDetailRow("Desa", jemaah["village"] ?? ''),
+                      InkWell(
+                        onTap: () => Navigator.pop(context),
+                        child: Row(
+                          children: const [
+                            Icon(Icons.chevron_left, color: Colors.white),
+                            SizedBox(width: 4),
+                            Text(
+                              'Kembali',
+                              style: TextStyle(color: Colors.white, fontSize: 16),
+                            ),
                           ],
                         ),
                       ),
                     ],
                   ),
-                );
-              },
-            ),
-
-            const SizedBox(height: 16),
-
-            // Tombol Tambah Anggota
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton(
-                onPressed: _addJemaah,
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  side: BorderSide(color: Colors.grey.shade400),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)
+                ),
+                
+                // Content area
+                Expanded(
+                  child: Stack(
+                    children: [
+                      // Scrollable content
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 60),
+                        child: SingleChildScrollView(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Package Card
+                              Card(
+                                margin: const EdgeInsets.only(bottom: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: 60,
+                                        height: 60,
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey[200],
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 16),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              widget.package.namaPaket ?? "Paket",
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              widget.package.harga ?? "",
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {},
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: const Color(0xFF3256B2),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                        ),
+                                        child: const Text(
+                                          "Detail",
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              
+                              // Informasi Jema'ah
+                              const Padding(
+                                padding: EdgeInsets.only(left: 8, bottom: 8, top: 8),
+                                child: Text(
+                                  "Informasi Jema'ah :",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              
+                              // Main member card
+                              Card(
+                                margin: const EdgeInsets.only(bottom: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            widget.mainMember["name"] ?? "",
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          
+                                        ],
+                                      ),
+                                      const SizedBox(height: 8),
+                                      
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              
+                              // List Jema'ah
+                              Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "List Jema'ah (${jemaahList.length})",
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 16),
+                                      
+                                      // Jemaah list
+                                      ...jemaahList.map((jemaah) => _buildJemaahCard(jemaah)).toList(),
+                                      
+                                      // Add Jemaah button
+                                      const SizedBox(height: 16),
+                                      SizedBox(
+                                        width: double.infinity,
+                                        child: OutlinedButton(
+                                          onPressed: _addJemaah,
+                                          style: OutlinedButton.styleFrom(
+                                            padding: const EdgeInsets.symmetric(vertical: 16),
+                                            side: const BorderSide(color: Color(0xFF3256B2)),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(8),
+                                            ),
+                                          ),
+                                          child: const Text(
+                                            "Tambah Jema'ah",
+                                            style: TextStyle(
+                                              color: Color(0xFF3256B2),
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      
+                      // Register button at bottom
+                      Positioned(
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        child: InkWell(
+                          onTap: isFormValid ? () {
+                            
+                          } : null,
+                          child: Container(
+                            width: double.infinity,
+                            color: const Color(0xFF3256B2),
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            child: const Text(
+                              "Daftarkan Sekarang",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                child: const Text(
-                  "+ Tambah Anggota",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500
-                  )
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: isFormValid ? () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => ConfirmBookingPage(
-                  //       mainMember: widget.mainMember,
-                  //       members: jemaahList,
-                  //       package: widget.package,
-                  //       departureDate: dateController.text,
-                  //     ),
-                  //   ),
-                  // );
-                  // print("Verifikasi booking dengan ${jemaahList.length} jemaah");
-                  // print("Tanggal keberangkatan: ${dateController.text}");
-                } : null,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  backgroundColor: isFormValid ? const Color(0xFFC81127) : Colors.grey,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)
-                  ),
-                ),
-                child: const Text(
-                  "Verifikasi Booking",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDetailRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 100,
-            child: Text(
-              label,
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.grey
-              ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              value,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500
-              ),
+              ],
             ),
           ),
         ],
@@ -320,36 +316,46 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
     );
   }
 
-  Widget buildTextField(
-    String label,
-    String hint,
-    TextEditingController controller, {
-    bool readOnly = false,
-    VoidCallback? onTap,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)
-        ),
-        const SizedBox(height: 6),
-        TextField(
-          controller: controller,
-          readOnly: readOnly,
-          onTap: onTap,
-          decoration: InputDecoration(
-            hintText: hint,
-            filled: true,
-            fillColor: Colors.grey.shade100,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide.none,
+  Widget _buildJemaahCard(Map<String, String> jemaah) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey.shade300),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                jemaah["name"] ?? "",
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Text(
+                jemaah["phone"] ?? "",
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Text(
+            jemaah["nik"] ?? "",
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.grey,
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

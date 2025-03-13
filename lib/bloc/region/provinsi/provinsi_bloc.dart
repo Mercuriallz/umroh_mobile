@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_umroh/bloc/region/provinsi/provinsi_state.dart';
+import 'package:mobile_umroh/constant/constant.dart';
 import 'package:mobile_umroh/model/region/provinsi_model.dart';
 
 class ProvinsiBloc extends Cubit<ProvinsiState> {
@@ -10,7 +11,7 @@ class ProvinsiBloc extends Cubit<ProvinsiState> {
     final dio = Dio();
     try {
       final response =
-          await dio.get("http://101.50.2.190:8040/v1/wilayah/provinsi",
+          await dio.get("$baseUrl/wilayah/provinsi",
               options: Options(headers: {
                 "umr_api_key": "CoACeX6XEj",
               }));

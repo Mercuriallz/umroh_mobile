@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_umroh/bloc/region/kelurahan/kelurahan_state.dart';
+import 'package:mobile_umroh/constant/constant.dart';
 import 'package:mobile_umroh/model/region/kelurahan_model.dart';
 
 class KelurahanBloc extends Cubit<KelurahanState> {
@@ -11,7 +12,7 @@ class KelurahanBloc extends Cubit<KelurahanState> {
 
     try {
       final response =
-          await dio.get("http://101.50.2.190:8040/v1/wilayah/kelurahan/$id",
+          await dio.get("$baseUrl/wilayah/kelurahan/$id",
               options: Options(headers: {
                 "umr_api_key": "CoACeX6XEj",
               }));

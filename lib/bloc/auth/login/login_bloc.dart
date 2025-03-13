@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:mobile_umroh/bloc/auth/login/login_state.dart';
+import 'package:mobile_umroh/constant/constant.dart';
 import 'package:mobile_umroh/model/auth/login/login_model.dart';
 import 'package:mobile_umroh/model/auth/login/login_request_model.dart';
 import 'package:mobile_umroh/presentation/home.dart';
@@ -22,7 +23,7 @@ class LoginBloc extends Cubit<LoginState> {
 
     try {
       final response = await dio.post(
-        "http://101.50.2.190:8040/v1/auth/user/sign-in",
+        "$baseUrl/auth/user/sign-in",
         data: dataLogin,
         options: Options(
           headers: {
