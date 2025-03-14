@@ -27,6 +27,7 @@ class _AddInformationPageState extends State<AddInformationPage> {
   final nameController = TextEditingController();
   final addressController = TextEditingController();
   final phoneNumberController = TextEditingController();
+  final kadesNameController = TextEditingController();
 
   String? selectedProvince;
   String? selectedRegency;
@@ -35,6 +36,9 @@ class _AddInformationPageState extends State<AddInformationPage> {
 
   bool get isFormValid {
     return nameController.text.isNotEmpty &&
+        addressController.text.isNotEmpty &&
+        phoneNumberController.text.isNotEmpty &&
+        kadesNameController.text.isNotEmpty &&
         selectedProvince != null &&
         selectedRegency != null &&
         selectedDistrict != null &&
@@ -45,16 +49,18 @@ class _AddInformationPageState extends State<AddInformationPage> {
   void initState() {
     super.initState();
     nameController.addListener(() => setState(() {}));
-    // emailController.addListener(() => setState(() {}));
-    // nikController.addListener(() => setState(() {}));
+    addressController.addListener(() => setState(() {}));
+    phoneNumberController.addListener(() => setState(() {}));
+    kadesNameController.addListener(() => setState(() {}));
     context.read<ProvinsiBloc>().getProvinsi();
   }
 
   @override
   void dispose() {
     nameController.dispose();
-    // emailController.dispose();
-    // nikController.dispose();
+    addressController.dispose();
+    phoneNumberController.dispose();
+    kadesNameController.dispose();
     super.dispose();
   }
 
@@ -81,8 +87,6 @@ class _AddInformationPageState extends State<AddInformationPage> {
                   ],
                 ),
                 const SizedBox(height: 20),
-
-                const SizedBox(height: 12),
 
                 // Dropdown Provinsi
                 Text("PILIH PROVINSI"),
@@ -221,33 +225,30 @@ class _AddInformationPageState extends State<AddInformationPage> {
                   },
                 ),
 
-                const SizedBox(
-                  height: 12,
-                ),
-                Text("Alamat"),
-                const SizedBox(
-                  height: 8,
-                ),
-                buildTextField(
-                    "Alamat", "Masukkan alamat Anda", addressController),
-                const SizedBox(
-                  height: 12,
-                ),
+                const SizedBox(height: 12),
+                
+                Text("NAMA"),
+                const SizedBox(height: 8),
+                buildTextField("Nama", "Masukkan nama Anda", nameController),
+                
+                const SizedBox(height: 12),
+                
+                Text("ALAMAT"),
+                const SizedBox(height: 8),
+                buildTextField("Alamat", "Masukkan alamat Anda", addressController),
+                
+                const SizedBox(height: 12),
+                
                 Text("NAMA KADES"),
-                const SizedBox(
-                  height: 8,
-                ),
-                buildTextField(
-                    "Nama Kades", "Masukkan Nama Kades", nameController),
-                const SizedBox(
-                  height: 12,
-                ),
-                Text("No. HP"),
-                const SizedBox(
-                  height: 8,
-                ),
-                buildTextField("Nomor Telepon", "Masukkan No.Hp Anda",
-                    phoneNumberController),
+                const SizedBox(height: 8),
+                buildTextField("Nama Kades", "Masukkan Nama Kades", kadesNameController),
+                
+                const SizedBox(height: 12),
+                
+                Text("NOMOR HP"),
+                const SizedBox(height: 8),
+                buildTextField("Nomor Telepon", "Masukkan No.HP Anda", phoneNumberController),
+                
                 const SizedBox(height: 20),
 
                 // Tombol Selanjutnya
@@ -259,10 +260,13 @@ class _AddInformationPageState extends State<AddInformationPage> {
                             debugPrint("Submitting form");
                             final formData = {
                               'name': nameController.text,
-                              // 'email': emailController.text,
-                              // 'nik': nikController.text,
+                              'address': addressController.text,
+                              'kadesName': kadesNameController.text,
+                              'phoneNumber': phoneNumberController.text,
                               'province': selectedProvince!,
                               'regency': selectedRegency!,
+                              'district': selectedDistrict!,
+                              'subdistrict': selectedSubDistrict!,
                             };
                             if (widget.existingMembers.isEmpty) {
                               Navigator.push(

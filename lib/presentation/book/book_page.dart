@@ -85,8 +85,6 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
             ),
           ),
           
-          // Overlay to darken the background image (optional)
-         
           // Main Content
           SafeArea(
             child: Column(
@@ -217,11 +215,31 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
-                                          
+                                          Text(
+                                            widget.mainMember["phoneNumber"] ?? "",
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
                                         ],
                                       ),
                                       const SizedBox(height: 8),
-                                      
+                                      Text(
+                                        "Alamat: ${widget.mainMember["address"] ?? ""}",
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        "Kades: ${widget.mainMember["kadesName"] ?? ""}",
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -338,7 +356,7 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
                 ),
               ),
               Text(
-                jemaah["phone"] ?? "",
+                jemaah["phoneNumber"] ?? "",
                 style: const TextStyle(
                   fontSize: 14,
                   color: Colors.grey,
@@ -348,7 +366,15 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
           ),
           const SizedBox(height: 4),
           Text(
-            jemaah["nik"] ?? "",
+            "Alamat: ${jemaah["address"] ?? ""}",
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.grey,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            "Kades: ${jemaah["kadesName"] ?? ""}",
             style: const TextStyle(
               fontSize: 14,
               color: Colors.grey,
