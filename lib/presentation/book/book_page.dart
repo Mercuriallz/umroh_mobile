@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile_umroh/bloc/jemaah/regist-jemaah/regist_jemaah_bloc.dart';
+import 'package:mobile_umroh/model/jemaah/regist-jemaah/regist_jemaah_model.dart';
+// import 'package:intl/intl.dart';
 import 'package:mobile_umroh/model/package/package_model.dart';
-import 'package:mobile_umroh/presentation/book/add_information_page.dart';
+import 'package:mobile_umroh/presentation/book/add_jemaah_page.dart';
 
 class BookingJemaahPage extends StatefulWidget {
   final Map<String, String> mainMember;
@@ -29,28 +32,11 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
     jemaahList = List.from(widget.members);
   }
 
-  bool get isFormValid => dateController.text.isNotEmpty && jemaahList.isNotEmpty;
-
-  Future<void> _selectDate() async {
-    DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2100),
-    );
-
-    if (pickedDate != null) {
-      setState(() {
-        dateController.text = DateFormat('dd/MM/yyyy').format(pickedDate);
-      });
-    }
-  }
-
   void _addJemaah() async {
     final newMember = await Navigator.push<Map<String, String>>(
       context,
       MaterialPageRoute(
-        builder: (context) => AddInformationPage(
+        builder: (context) => AddJemaahPage(
           existingMembers: jemaahList,
           package: widget.package,
         ),
@@ -84,14 +70,15 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
               ),
             ),
           ),
-          
+
           // Main Content
           SafeArea(
             child: Column(
               children: [
                 // Custom App Bar
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Row(
                     children: [
                       InkWell(
@@ -102,7 +89,8 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
                             SizedBox(width: 4),
                             Text(
                               'Kembali',
-                              style: TextStyle(color: Colors.white, fontSize: 16),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 16),
                             ),
                           ],
                         ),
@@ -110,7 +98,7 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
                     ],
                   ),
                 ),
-                
+
                 // Content area
                 Expanded(
                   child: Stack(
@@ -138,16 +126,19 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
                                         height: 60,
                                         decoration: BoxDecoration(
                                           color: Colors.grey[200],
-                                          borderRadius: BorderRadius.circular(8),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
                                         ),
                                       ),
                                       const SizedBox(width: 16),
                                       Expanded(
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              widget.package.namaPaket ?? "Paket",
+                                              widget.package.namaPaket ??
+                                                  "Paket",
                                               style: const TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,
@@ -166,9 +157,11 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
                                       ElevatedButton(
                                         onPressed: () {},
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor: const Color(0xFF3256B2),
+                                          backgroundColor:
+                                              const Color(0xFF3256B2),
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(8),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
                                           ),
                                         ),
                                         child: const Text(
@@ -180,10 +173,11 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
                                   ),
                                 ),
                               ),
-                              
+
                               // Informasi Jema'ah
                               const Padding(
-                                padding: EdgeInsets.only(left: 8, bottom: 8, top: 8),
+                                padding:
+                                    EdgeInsets.only(left: 8, bottom: 8, top: 8),
                                 child: Text(
                                   "Informasi Jema'ah :",
                                   style: TextStyle(
@@ -193,7 +187,7 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
                                   ),
                                 ),
                               ),
-                              
+
                               // Main member card
                               Card(
                                 margin: const EdgeInsets.only(bottom: 16),
@@ -203,10 +197,12 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(16),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
                                             widget.mainMember["name"] ?? "",
@@ -216,12 +212,20 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
                                             ),
                                           ),
                                           Text(
-                                            widget.mainMember["phoneNumber"] ?? "",
+                                            widget.mainMember["phoneNumber"] ??
+                                                "",
                                             style: const TextStyle(
                                               fontSize: 14,
                                               color: Colors.grey,
                                             ),
                                           ),
+                                          //  Text(
+                                          //   widget.mainMember["kadesName"] ?? "",
+                                          //   style: const TextStyle(
+                                          //     fontSize: 14,
+                                          //     color: Colors.grey,
+                                          //   ),
+                                          // ),
                                         ],
                                       ),
                                       const SizedBox(height: 8),
@@ -244,7 +248,7 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
                                   ),
                                 ),
                               ),
-                              
+
                               // List Jema'ah
                               Card(
                                 shape: RoundedRectangleBorder(
@@ -253,7 +257,8 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(16),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         "List Jema'ah (${jemaahList.length})",
@@ -263,10 +268,13 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
                                         ),
                                       ),
                                       const SizedBox(height: 16),
-                                      
+
                                       // Jemaah list
-                                      ...jemaahList.map((jemaah) => _buildJemaahCard(jemaah)).toList(),
-                                      
+                                      ...jemaahList
+                                          .map((jemaah) =>
+                                              _buildJemaahCard(jemaah)).toList(),
+                                          
+
                                       // Add Jemaah button
                                       const SizedBox(height: 16),
                                       SizedBox(
@@ -274,10 +282,13 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
                                         child: OutlinedButton(
                                           onPressed: _addJemaah,
                                           style: OutlinedButton.styleFrom(
-                                            padding: const EdgeInsets.symmetric(vertical: 16),
-                                            side: const BorderSide(color: Color(0xFF3256B2)),
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 16),
+                                            side: const BorderSide(
+                                                color: Color(0xFF3256B2)),
                                             shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(8),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
                                             ),
                                           ),
                                           child: const Text(
@@ -297,16 +308,48 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
                           ),
                         ),
                       ),
-                      
+
                       // Register button at bottom
                       Positioned(
                         left: 0,
                         right: 0,
                         bottom: 0,
                         child: InkWell(
-                          onTap: isFormValid ? () {
-                            
-                          } : null,
+                          onTap: () {
+                            // print("Button pressed");
+
+                            // Membuat list anggota tanpa mainMember
+                            var anggotaList = jemaahList
+                                .map((jemaah) => Anggota(
+                                      namaAnggota: jemaah["name"],
+                                      nik: jemaah["nik"],
+                                      noTelp: jemaah["no_telp"],
+                                    ))
+                                .toList();
+
+                            // Buang anggota pertama jika itu adalah mainMember
+                            if (anggotaList.isNotEmpty &&
+                                anggotaList.first.namaAnggota ==
+                                    widget.mainMember["name"]) {
+                              anggotaList.removeAt(0);
+                            }
+
+                            var data = RegistJemaahModel(
+                              paketId: widget.package.paketId.toString(),
+                              provinsiId: widget.mainMember["province"] ?? "",
+                              kabupatenId: widget.mainMember["regency"] ?? "",
+                              kecamatanId: widget.mainMember["district"] ?? "",
+                              kelurahanId:
+                                  widget.mainMember["subdistrict"] ?? "",
+                              namaKades: widget.mainMember["kadesName"] ?? "",
+                              noTelp: widget.mainMember["phoneNumber"] ?? "",
+                              anggota: anggotaList,
+                            );
+
+                            context.read<RegistJemaahBloc>().registJemaah(data);
+                            // print(data
+                            //     .toJson()); // Debugging untuk memastikan data sudah benar
+                          },
                           child: Container(
                             width: double.infinity,
                             color: const Color(0xFF3256B2),
@@ -356,7 +399,7 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
                 ),
               ),
               Text(
-                jemaah["phoneNumber"] ?? "",
+                jemaah["no_telp"] ?? "",
                 style: const TextStyle(
                   fontSize: 14,
                   color: Colors.grey,
@@ -366,15 +409,7 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
           ),
           const SizedBox(height: 4),
           Text(
-            "Alamat: ${jemaah["address"] ?? ""}",
-            style: const TextStyle(
-              fontSize: 14,
-              color: Colors.grey,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            "Kades: ${jemaah["kadesName"] ?? ""}",
+            "NIK: ${jemaah["nik"] ?? ""}",
             style: const TextStyle(
               fontSize: 14,
               color: Colors.grey,

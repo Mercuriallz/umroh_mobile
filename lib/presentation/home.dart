@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mobile_umroh/presentation/auth/login.dart';
+import 'package:mobile_umroh/presentation/informasi-haji/informasi_haji_page.dart';
 import 'package:mobile_umroh/presentation/package/package_umroh.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -70,7 +73,9 @@ class HomePage extends StatelessWidget {
                           icon: Icons.info_outline,
                           title: "Informasi Haji",
                           subtitle: "Cek keberangkatan jema’ah haji",
-                          onTap: () {},
+                          onTap: () {
+                            Get.to(HajiInformationPage());
+                          },
                         ),
                         const SizedBox(height: 12),
                         _buildOptionCard(
@@ -79,6 +84,18 @@ class HomePage extends StatelessWidget {
                           subtitle: "Tambahkan keberangkatan jema’ah",
                           onTap: () {
                             Get.to(HajiRegistrationPage());
+                          },
+                        ),
+                        const SizedBox(height: 12,),
+                        _buildOptionCard(
+                          icon: Icons.logout,
+                          title: "Log-Out",
+                          subtitle: "Log-Out",
+                          onTap: () async {
+                            SharedPreferences prefs = await SharedPreferences.getInstance();
+                            prefs.remove("token");
+                            prefs.remove("login");
+                            Get.offAll(LoginPage());
                           },
                         ),
                       ],

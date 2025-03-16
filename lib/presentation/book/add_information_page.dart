@@ -61,6 +61,10 @@ class _AddInformationPageState extends State<AddInformationPage> {
     addressController.dispose();
     phoneNumberController.dispose();
     kadesNameController.dispose();
+    selectedProvince = null;
+    selectedRegency = null;
+    selectedDistrict = null;
+    selectedSubDistrict = null;
     super.dispose();
   }
 
@@ -226,29 +230,32 @@ class _AddInformationPageState extends State<AddInformationPage> {
                 ),
 
                 const SizedBox(height: 12),
-                
+
                 Text("NAMA"),
                 const SizedBox(height: 8),
                 buildTextField("Nama", "Masukkan nama Anda", nameController),
-                
+
                 const SizedBox(height: 12),
-                
+
                 Text("ALAMAT"),
                 const SizedBox(height: 8),
-                buildTextField("Alamat", "Masukkan alamat Anda", addressController),
-                
+                buildTextField(
+                    "Alamat", "Masukkan alamat Anda", addressController),
+
                 const SizedBox(height: 12),
-                
+
                 Text("NAMA KADES"),
                 const SizedBox(height: 8),
-                buildTextField("Nama Kades", "Masukkan Nama Kades", kadesNameController),
-                
+                buildTextField(
+                    "Nama Kades", "Masukkan Nama Kades", kadesNameController),
+
                 const SizedBox(height: 12),
-                
+
                 Text("NOMOR HP"),
                 const SizedBox(height: 8),
-                buildTextField("Nomor Telepon", "Masukkan No.HP Anda", phoneNumberController),
-                
+                buildTextField("Nomor Telepon", "Masukkan No.HP Anda",
+                    phoneNumberController),
+
                 const SizedBox(height: 20),
 
                 // Tombol Selanjutnya
@@ -285,7 +292,7 @@ class _AddInformationPageState extends State<AddInformationPage> {
                           }
                         : null,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: isFormValid ? Colors.red : Colors.grey,
+                      backgroundColor: isFormValid ? Colors.blue : Colors.grey,
                     ),
                     child: const Text("Selanjutnya",
                         style: TextStyle(color: Colors.white)),
@@ -300,7 +307,6 @@ class _AddInformationPageState extends State<AddInformationPage> {
   }
 }
 
-// Fungsi untuk TextField
 Widget buildTextField(
     String label, String hint, TextEditingController controller) {
   return TextField(

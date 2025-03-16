@@ -54,6 +54,8 @@ class DataPackage {
   bool? isActive;
   String? createdAt;
   String? updatedAt;
+  String? durasiPerjalanan;
+  List<TPaketFasilitas>? tPaketFasilitas;
 
   DataPackage(
       {this.paketId,
@@ -62,7 +64,9 @@ class DataPackage {
       this.harga,
       this.isActive,
       this.createdAt,
-      this.updatedAt});
+      this.updatedAt,
+      this.durasiPerjalanan,
+      this.tPaketFasilitas});
 
   DataPackage.fromJson(Map<String, dynamic> json) {
     paketId = json['paket_id'];
@@ -72,6 +76,13 @@ class DataPackage {
     isActive = json['is_active'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    durasiPerjalanan = json['durasi_perjalanan'];
+    if (json['t_paket_fasilitas'] != null) {
+      tPaketFasilitas = <TPaketFasilitas>[];
+      json['t_paket_fasilitas'].forEach((v) {
+        tPaketFasilitas!.add(TPaketFasilitas.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -83,6 +94,36 @@ class DataPackage {
     data['is_active'] = isActive;
     data['created_at'] = createdAt;
     data['updated_at'] = updatedAt;
+    data['durasi_perjalanan'] = durasiPerjalanan;
+    if (tPaketFasilitas != null) {
+      data['t_paket_fasilitas'] =
+          tPaketFasilitas!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class TPaketFasilitas {
+  int? fasilitasId;
+  int? paketId;
+  String? desc;
+  String? createdAt;
+
+  TPaketFasilitas({this.fasilitasId, this.paketId, this.desc, this.createdAt});
+
+  TPaketFasilitas.fromJson(Map<String, dynamic> json) {
+    fasilitasId = json['fasilitas_id'];
+    paketId = json['paket_id'];
+    desc = json['desc'];
+    createdAt = json['created_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['fasilitas_id'] = fasilitasId;
+    data['paket_id'] = paketId;
+    data['desc'] = desc;
+    data['created_at'] = createdAt;
     return data;
   }
 }
