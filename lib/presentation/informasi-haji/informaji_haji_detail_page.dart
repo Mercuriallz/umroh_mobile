@@ -25,7 +25,7 @@ class HajiInformationDetailPageState extends State<HajiInformationDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Detail Paket"),
+        title: const Text("List Jemaah Umroh"),
         actions: [
           IconButton(
             icon: const Icon(Icons.close),
@@ -60,6 +60,7 @@ class HajiInformationDetailPageState extends State<HajiInformationDetailPage> {
               ),
               const SizedBox(height: 16),
               Container(
+                width: double.infinity,
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
@@ -74,7 +75,7 @@ class HajiInformationDetailPageState extends State<HajiInformationDetailPage> {
                     ),
                      Text(widget.jemaah.noTelp!),
                     const SizedBox(height: 8),
-                    const Text("Jln. H. Ateng 3 No.50 RT.005/RW.20, Kec. Sumajaya, Kel. Baktijaya, Depok, Jawa Barat"),
+                     Text(widget.jemaah.alamatLengkap!),
                   ],
                 ),
               ),
@@ -132,7 +133,9 @@ class HajiInformationDetailPageState extends State<HajiInformationDetailPage> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blueAccent,
                     shape: RoundedRectangleBorder(

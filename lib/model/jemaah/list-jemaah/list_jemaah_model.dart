@@ -57,6 +57,7 @@ class DataListJemaah {
   String? namaKades;
   String? noTelp;
   int? status;
+  String? alamatLengkap;
   String? createdAt;
   String? updatedAt;
   UserPendaftar? userPendaftar;
@@ -78,6 +79,7 @@ class DataListJemaah {
       this.namaKades,
       this.noTelp,
       this.status,
+      this.alamatLengkap,
       this.createdAt,
       this.updatedAt,
       this.userPendaftar,
@@ -99,6 +101,7 @@ class DataListJemaah {
     namaKades = json['nama_kades'];
     noTelp = json['no_telp'];
     status = json['status'];
+    alamatLengkap = json['alamat_lengkap'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     userPendaftar = json['user_pendaftar'] != null
@@ -138,6 +141,7 @@ class DataListJemaah {
     data['nama_kades'] = namaKades;
     data['no_telp'] = noTelp;
     data['status'] = status;
+    data['alamat_lengkap'] = alamatLengkap;
     data['created_at'] = createdAt;
     data['updated_at'] = updatedAt;
     if (userPendaftar != null) {

@@ -4,7 +4,6 @@ import "package:flutter/material.dart";
 import 'package:get/get.dart';
 import 'package:mobile_umroh/presentation/auth/login.dart';
 import 'package:mobile_umroh/presentation/home.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BoardingScreen extends StatefulWidget {
@@ -15,13 +14,17 @@ class BoardingScreen extends StatefulWidget {
 }
 
 class _BoardingState extends State<BoardingScreen> {
-
-    List<String> imagePaths = [
+  List<String> imagePaths = [
     "assets/images/ABPEDNAS.png",
     "assets/images/AKSI_1.png",
     "assets/images/APDESI.png",
+    "assets/images/DPN PPDI.png",
     "assets/images/logo desa bersatu new.png",
+    "assets/images/DPP PPDI.png",
+    "assets/images/KOMPAKDESI.png",
+    "assets/images/PABPDSI.png",
     "assets/images/PARADE.png",
+    "assets/images/nusa_safar.jpg"
   ];
 
   Timer? timerCheck;
@@ -45,7 +48,6 @@ class _BoardingState extends State<BoardingScreen> {
   @override
   void initState() {
     super.initState();
-
     checkLogin();
   }
 
@@ -58,35 +60,46 @@ class _BoardingState extends State<BoardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    body: Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        const Spacer(),
-        Center(
-          child: Image.asset(
-            "assets/images/umroh_mobile.png",
-            width: 120,
-            height: 120,
-            fit: BoxFit.contain,
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.asset(
+            "assets/images/haji_background.png",
+            fit: BoxFit.cover,
           ),
-        ),
-        const Spacer(),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
-          child: Row(
+          Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: List.generate(5, (index) => 
-              Image.asset(
-                imagePaths[index],
-                width: 60,
-                height: 60,
-                fit: BoxFit.contain,
+            children: [
+              const Spacer(),
+              Center(
+                child: Image.asset(
+                  "assets/images/umroh_mobile_transparent.png",
+                  width: 250,
+                  height: 250,
+                  fit: BoxFit.contain,
+                ),
               ),
-            ),
+              const Spacer(),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: List.generate(
+                    10,
+                    (index) => Image.asset(
+                      imagePaths[index],
+                      width: 30,
+                      height: 30,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ),
-      ],
-    ),
-  );
+        ],
+      ),
+    );
   }
 }

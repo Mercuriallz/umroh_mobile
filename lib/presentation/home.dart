@@ -71,8 +71,8 @@ class HomePage extends StatelessWidget {
                         const SizedBox(height: 16),
                         _buildOptionCard(
                           icon: Icons.info_outline,
-                          title: "Informasi Haji",
-                          subtitle: "Cek keberangkatan jema’ah haji",
+                          title: "Informasi Umroh",
+                          subtitle: "Cek keberangkatan jema’ah umroh",
                           onTap: () {
                             Get.to(HajiInformationPage());
                           },

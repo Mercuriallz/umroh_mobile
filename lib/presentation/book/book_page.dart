@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_umroh/bloc/jemaah/regist-jemaah/regist_jemaah_bloc.dart';
 import 'package:mobile_umroh/model/jemaah/regist-jemaah/regist_jemaah_model.dart';
-// import 'package:intl/intl.dart';
 import 'package:mobile_umroh/model/package/package_model.dart';
 import 'package:mobile_umroh/presentation/book/add_jemaah_page.dart';
 
@@ -219,13 +218,6 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
                                               color: Colors.grey,
                                             ),
                                           ),
-                                          //  Text(
-                                          //   widget.mainMember["kadesName"] ?? "",
-                                          //   style: const TextStyle(
-                                          //     fontSize: 14,
-                                          //     color: Colors.grey,
-                                          //   ),
-                                          // ),
                                         ],
                                       ),
                                       const SizedBox(height: 8),
@@ -261,7 +253,7 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "List Jema'ah (${jemaahList.length})",
+                                        "List Jema'ah (${jemaahList.length - 1})",
                                         style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w500,
@@ -269,11 +261,11 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
                                       ),
                                       const SizedBox(height: 16),
 
-                                      // Jemaah list
-                                      ...jemaahList
-                                          .map((jemaah) =>
-                                              _buildJemaahCard(jemaah)),
-                                          
+                                      // Jemaah list tanpa indeks pertama
+                                      ...jemaahList.asMap().entries
+                                          .where((entry) => entry.key != 0)
+                                          .map((entry) =>
+                                              _buildJemaahCard(entry.value)),
 
                                       // Add Jemaah button
                                       const SizedBox(height: 16),
@@ -308,8 +300,6 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
                           ),
                         ),
                       ),
-
-                      // Register button at bottom
                       Positioned(
                         left: 0,
                         right: 0,
