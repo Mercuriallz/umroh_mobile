@@ -33,7 +33,7 @@ class HomePage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                    "Selamat Datang di Pendaftaran Haji",
+                    "Selamat Datang di Pendaftaran Umroh Desa",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 22,

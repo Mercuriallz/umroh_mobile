@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:mobile_umroh/bloc/auth/login/login_bloc.dart';
-import 'package:mobile_umroh/bloc/region/provinsi/provinsi_bloc.dart';
+
 import 'package:mobile_umroh/model/auth/login/login_request_model.dart';
 import 'package:mobile_umroh/presentation/auth/register.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   // Welcome Text
                   const Text(
-                    "Selamat Datang di Pendaftaran Haji",
+                    "Selamat Datang di Pendaftaran Umroh Desa",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 20,

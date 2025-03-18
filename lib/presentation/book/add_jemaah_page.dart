@@ -119,7 +119,7 @@ class _AddJemaahPageState extends State<AddJemaahPage> {
                             }
                           }
                         : null,
-                         style: ElevatedButton.styleFrom(
+                    style: ElevatedButton.styleFrom(
                       backgroundColor: isFormValid ? Colors.blue : Colors.grey,
                     ),
                     child: const Text("Selanjutnya",
@@ -142,7 +142,7 @@ Widget buildTextField(
     decoration: InputDecoration(
       labelText: label,
       hintText: hint,
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
     ),
   );
 }

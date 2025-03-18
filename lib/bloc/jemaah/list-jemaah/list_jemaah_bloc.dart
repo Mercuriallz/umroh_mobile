@@ -7,22 +7,45 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ListJemaahBloc extends Cubit<ListJemaahState> {
   ListJemaahBloc() : super(ListJemaahInitial());
+  final Dio _dio = Dio();
+  int currentPage = 1;
+  bool isFetching = false;
+  List<DataListJemaah> jemaahList = [];
 
   void getListJemaah() async {
-    final dio = Dio();
+    currentPage = 1;
+    jemaahList.clear();
+    fetchJemaah();
+  }
+
+  void loadMoreJemaah() {
+    if (!isFetching) {
+      currentPage++;
+      fetchJemaah(isLoadMore: true);
+    }
+  }
+
+  Future<void> fetchJemaah({bool isLoadMore = false}) async {
+    isFetching = true;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString("token");
 
     try {
-      final response = await dio.get("$baseUrl/pendaftaran-umroh",
-          options: Options(headers: {'Authorization': 'Bearer $token'}));
+      final response = await _dio.get(
+        "$baseUrl/pendaftaran-umroh?page=$currentPage",
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
       if (response.statusCode == 200) {
-       
         var listJemaahData = ListJemaahModel.fromJson(response.data).data;
-        emit(ListJemaahLoaded(listJemaahData!));
+        if (listJemaahData != null) {
+          jemaahList.addAll(listJemaahData);
+          emit(ListJemaahLoaded(jemaahList, isLoadingMore: isLoadMore));
+        }
       }
     } catch (e) {
-      emit(ListJemaahError("Error : ${e.toString()}"));
+      emit(ListJemaahError("Error: ${e.toString()}"));
+    } finally {
+      isFetching = false;
     }
   }
 }

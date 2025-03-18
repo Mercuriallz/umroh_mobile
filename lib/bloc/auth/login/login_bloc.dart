@@ -13,11 +13,23 @@ class LoginBloc extends Cubit<LoginState> {
   LoginBloc() : super(LoginInitial());
 
   Future<LoginModel> login({LoginRequestModel? formData}) async {
+    if (formData == null) {
+      emit(LoginError("Data login tidak boleh kosong"));
+      Get.snackbar(
+        "Login Gagal",
+        "Data login tidak boleh kosong",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Get.theme.colorScheme.error,
+        colorText: Get.theme.colorScheme.onError,
+      );
+      throw Exception("Data login tidak boleh kosong");
+    }
+
     final dio = Dio();
     EasyLoading.show(status: "Loading");
 
     Map<String, dynamic> dataLogin = {
-      'email': formData!.email,
+      'email': formData.email,
       'password': formData.password,
     };
 
@@ -28,7 +40,7 @@ class LoginBloc extends Cubit<LoginState> {
         options: Options(
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
-            "umr_api_key": "CoACeX6XEj",
+            "umr_api_key": apiKey,
           },
         ),
       );
@@ -36,7 +48,6 @@ class LoginBloc extends Cubit<LoginState> {
       if (response.statusCode == 200) {
         EasyLoading.dismiss();
         emit(LoginSuccess());
-        Get.offAll(HomePage());
 
         var loginModel = LoginModel.fromJson(response.data);
         var token = loginModel.token;
@@ -44,15 +55,61 @@ class LoginBloc extends Cubit<LoginState> {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString("token", token!);
 
+        // Tampilkan Snackbar sukses
+        Get.snackbar(
+          "Login Berhasil",
+          "Selamat datang!",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Get.theme.colorScheme.primary,
+          colorText: Get.theme.colorScheme.onPrimary,
+        );
+
+        Get.offAll(HomePage());
         return loginModel;
-      } else {
+      } 
+      else if (response.statusCode == 400) {
         EasyLoading.dismiss();
-        throw Exception(
-            "Login gagal dengan status code: ${response.statusCode}");
+
+        String errorMessage = response.data?['message'] ?? "Email atau password salah.";
+        emit(LoginError(errorMessage));
+
+        Get.snackbar(
+          "Login Gagal",
+          errorMessage,
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Get.theme.colorScheme.error,
+          colorText: Get.theme.colorScheme.onError,
+        );
+
+        throw Exception(errorMessage);
+      } 
+      else {
+        EasyLoading.dismiss();
+        String errorMessage = "Login gagal dengan status code: ${response.statusCode}";
+
+        Get.snackbar(
+          "Login Gagal",
+          errorMessage,
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Get.theme.colorScheme.error,
+          colorText: Get.theme.colorScheme.onError,
+        );
+
+        throw Exception(errorMessage);
       }
     } catch (e) {
       EasyLoading.dismiss();
       emit(LoginError(e.toString()));
+
+      // Tampilkan Snackbar error
+      Get.snackbar(
+        "Terjadi Kesalahan",
+        "Error: $e",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Get.theme.colorScheme.error,
+        colorText: Get.theme.colorScheme.onError,
+      );
+
       throw Exception("Terjadi kesalahan saat login: $e");
     }
   }

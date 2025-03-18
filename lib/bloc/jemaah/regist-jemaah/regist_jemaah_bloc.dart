@@ -16,13 +16,13 @@ class RegistJemaahBloc extends Cubit<RegistJemaahState> {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String? token = prefs.getString('token');
 
-  // Ubah formData menjadi Map<String, dynamic>
   Map<String, dynamic> registData = {
     "paket_id": formData.paketId,
     "provinsi_id": formData.provinsiId,
     "kabupaten_id": formData.kabupatenId,
     "kecamatan_id": formData.kecamatanId,
     "kelurahan_id": formData.kelurahanId,
+    "alamat_lengkap": formData.alamatLengkap,
     "nama_kades": formData.namaKades,
     "no_telp": formData.noTelp,
     "anggota": formData.anggota != null
@@ -48,6 +48,8 @@ class RegistJemaahBloc extends Cubit<RegistJemaahState> {
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       // print("Status Code: ${response.statusCode}, Emit Success State");
+      // print("Response data --> ${response.data}");
+      // print("Regist data --> $registData");
       emit(RegisterJemaahSuccess());
       Get.snackbar(
         "Success",

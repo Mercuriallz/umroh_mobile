@@ -272,7 +272,7 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
                                       // Jemaah list
                                       ...jemaahList
                                           .map((jemaah) =>
-                                              _buildJemaahCard(jemaah)).toList(),
+                                              _buildJemaahCard(jemaah)),
                                           
 
                                       // Add Jemaah button
@@ -316,9 +316,7 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
                         bottom: 0,
                         child: InkWell(
                           onTap: () {
-                            // print("Button pressed");
-
-                            // Membuat list anggota tanpa mainMember
+                           
                             var anggotaList = jemaahList
                                 .map((jemaah) => Anggota(
                                       namaAnggota: jemaah["name"],
@@ -327,7 +325,6 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
                                     ))
                                 .toList();
 
-                            // Buang anggota pertama jika itu adalah mainMember
                             if (anggotaList.isNotEmpty &&
                                 anggotaList.first.namaAnggota ==
                                     widget.mainMember["name"]) {
@@ -341,10 +338,11 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
                               kecamatanId: widget.mainMember["district"] ?? "",
                               kelurahanId:
                                   widget.mainMember["subdistrict"] ?? "",
+                              alamatLengkap: widget.mainMember["address"] ?? "",
                               namaKades: widget.mainMember["kadesName"] ?? "",
                               noTelp: widget.mainMember["phoneNumber"] ?? "",
                               anggota: anggotaList,
-                            );
+                            );  
 
                             context.read<RegistJemaahBloc>().registJemaah(data);
                             // print(data

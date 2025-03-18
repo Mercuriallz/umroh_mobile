@@ -4,6 +4,7 @@ class RegistJemaahModel {
   String? kabupatenId;
   String? kecamatanId;
   String? kelurahanId;
+  String? alamatLengkap;
   String? namaKades;
   String? noTelp;
   List<Anggota>? anggota;
@@ -14,6 +15,7 @@ class RegistJemaahModel {
       this.kabupatenId,
       this.kecamatanId,
       this.kelurahanId,
+      this.alamatLengkap,
       this.namaKades,
       this.noTelp,
       this.anggota});
@@ -24,6 +26,7 @@ class RegistJemaahModel {
     kabupatenId = json['kabupaten_id'];
     kecamatanId = json['kecamatan_id'];
     kelurahanId = json['kelurahan_id'];
+    alamatLengkap = json['alamat_lengkap'];
     namaKades = json['nama_kades'];
     noTelp = json['no_telp'];
     if (json['anggota'] != null) {
@@ -41,6 +44,7 @@ class RegistJemaahModel {
     data['kabupaten_id'] = kabupatenId;
     data['kecamatan_id'] = kecamatanId;
     data['kelurahan_id'] = kelurahanId;
+    data['alamat_lengkap'] = alamatLengkap;
     data['nama_kades'] = namaKades;
     data['no_telp'] = noTelp;
     if (anggota != null) {

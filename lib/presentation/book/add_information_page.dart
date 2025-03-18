@@ -93,7 +93,8 @@ class _AddInformationPageState extends State<AddInformationPage> {
                 const SizedBox(height: 20),
 
                 // Dropdown Provinsi
-                Text("PILIH PROVINSI"),
+                Text("PILIH PROVINSI",
+                    style: TextStyle(fontWeight: FontWeight.bold)),
                 BlocBuilder<ProvinsiBloc, ProvinsiState>(
                   builder: (context, state) {
                     if (state is ProvinsiLoaded) {
@@ -122,15 +123,20 @@ class _AddInformationPageState extends State<AddInformationPage> {
                     } else if (state is ProvinsiLoading) {
                       return CircularProgressIndicator();
                     } else {
-                      return const Text("Gagal memuat data provinsi");
+                      return FormBuilderDropdown(
+                        name: 'ProvinsiDropdown',
+                        items: [],
+                        decoration: _dropdownDecoration(),
+                      );
                     }
                   },
                 ),
 
-                const SizedBox(height: 12),
+                const SizedBox(height: 20),
 
                 // Dropdown Kabupaten
-                Text("PILIH KABUPATEN"),
+                Text("PILIH KABUPATEN",
+                    style: TextStyle(fontWeight: FontWeight.bold)),
                 BlocBuilder<KabupatenBloc, KabupatenState>(
                   builder: (context, state) {
                     if (state is KabupatenLoaded) {
@@ -158,15 +164,21 @@ class _AddInformationPageState extends State<AddInformationPage> {
                     } else if (state is KabupatenLoading) {
                       return CircularProgressIndicator();
                     } else {
-                      return const Text("Pilih Provinsi terlebih dahulu");
+                      return FormBuilderDropdown(
+                        name: 'KabupatenDropdown',
+                        items: [],
+                        decoration: _dropdownDecoration(),
+                        hint: Text("Pilih Kabupaten"),
+                      );
                     }
                   },
                 ),
 
-                const SizedBox(height: 12),
+                const SizedBox(height: 20),
 
                 // Dropdown Kecamatan
-                Text("PILIH KECAMATAN"),
+                Text("PILIH KECAMATAN",
+                    style: TextStyle(fontWeight: FontWeight.bold)),
                 BlocBuilder<KecamatanBloc, KecamatanState>(
                   builder: (context, state) {
                     if (state is KecamatanLoaded) {
@@ -193,15 +205,21 @@ class _AddInformationPageState extends State<AddInformationPage> {
                     } else if (state is KecamatanLoading) {
                       return CircularProgressIndicator();
                     } else {
-                      return const Text("Pilih Kabupaten Terlebih Dahulu");
+                      return FormBuilderDropdown(
+                        name: 'KecamatanDropdown',
+                        items: [],
+                        decoration: _dropdownDecoration(),
+                        hint: Text("Pilih Kecamatan"),
+                      );
                     }
                   },
                 ),
 
-                const SizedBox(height: 12),
+                const SizedBox(height: 20),
 
                 // Dropdown Kelurahan
-                Text("PILIH KELURAHAN"),
+                Text("PILIH KELURAHAN",
+                    style: TextStyle(fontWeight: FontWeight.bold)),
                 BlocBuilder<KelurahanBloc, KelurahanState>(
                   builder: (context, state) {
                     if (state is KelurahanLoaded) {
@@ -224,34 +242,40 @@ class _AddInformationPageState extends State<AddInformationPage> {
                     } else if (state is KelurahanLoading) {
                       return CircularProgressIndicator();
                     } else {
-                      return const Text("Pilih Kecamatan terlebih dahulu");
+                      return FormBuilderDropdown(
+                        name: 'KelurahanDropdown',
+                        items: [],
+                        decoration: _dropdownDecoration(),
+                        hint: Text("Pilih Kelurahan"),
+                      );
                     }
                   },
                 ),
 
-                const SizedBox(height: 12),
+                const SizedBox(height: 20),
 
-                Text("NAMA"),
+                Text("NAMA", style: TextStyle(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 8),
                 buildTextField("Nama", "Masukkan nama Anda", nameController),
 
-                const SizedBox(height: 12),
+                const SizedBox(height: 20),
 
-                Text("ALAMAT"),
+                Text("ALAMAT", style: TextStyle(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 8),
                 buildTextField(
                     "Alamat", "Masukkan alamat Anda", addressController),
 
-                const SizedBox(height: 12),
+                const SizedBox(height: 20),
 
-                Text("NAMA KADES"),
+                Text("NAMA KADES",
+                    style: TextStyle(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 8),
                 buildTextField(
                     "Nama Kades", "Masukkan Nama Kades", kadesNameController),
 
-                const SizedBox(height: 12),
+                const SizedBox(height: 20),
 
-                Text("NOMOR HP"),
+                Text("NOMOR HP", style: TextStyle(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 8),
                 buildTextField("Nomor Telepon", "Masukkan No.HP Anda",
                     phoneNumberController),
@@ -314,13 +338,13 @@ Widget buildTextField(
     decoration: InputDecoration(
       labelText: label,
       hintText: hint,
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
     ),
   );
 }
 
 InputDecoration _dropdownDecoration() {
   return InputDecoration(
-    border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+    border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
   );
 }

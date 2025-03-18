@@ -15,6 +15,15 @@ class BoardingScreen extends StatefulWidget {
 }
 
 class _BoardingState extends State<BoardingScreen> {
+
+    List<String> imagePaths = [
+    "assets/images/ABPEDNAS.png",
+    "assets/images/AKSI_1.png",
+    "assets/images/APDESI.png",
+    "assets/images/logo desa bersatu new.png",
+    "assets/images/PARADE.png",
+  ];
+
   Timer? timerCheck;
 
   checkLogin() async {
@@ -24,7 +33,7 @@ class _BoardingState extends State<BoardingScreen> {
     if (kDebugMode) {
       print(checkLogin);
     }
-    timerCheck = Timer(const Duration(milliseconds: 500), () {
+    timerCheck = Timer(const Duration(milliseconds: 3000), () {
       if (token != null && checkLogin == true) {
         Get.offAll(const HomePage());
       } else {
@@ -49,18 +58,35 @@ class _BoardingState extends State<BoardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-          child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Image.asset("assets/images/haji_background.png", fit: BoxFit.contain),
-          const SizedBox(
-            height: 10,
+    body: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Spacer(),
+        Center(
+          child: Image.asset(
+            "assets/images/umroh_mobile.png",
+            width: 120,
+            height: 120,
+            fit: BoxFit.contain,
           ),
-          const Text("Umroh",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-        ],
-      )),
-    );
+        ),
+        const Spacer(),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: List.generate(5, (index) => 
+              Image.asset(
+                imagePaths[index],
+                width: 60,
+                height: 60,
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
   }
 }
