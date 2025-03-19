@@ -55,7 +55,6 @@ class LoginBloc extends Cubit<LoginState> {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString("token", token!);
 
-        // Tampilkan Snackbar sukses
         Get.snackbar(
           "Login Berhasil",
           "Selamat datang!",
@@ -75,7 +74,7 @@ class LoginBloc extends Cubit<LoginState> {
 
         Get.snackbar(
           "Login Gagal",
-          errorMessage,
+          "Username atau Password Salah",
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Get.theme.colorScheme.error,
           colorText: Get.theme.colorScheme.onError,
@@ -89,7 +88,7 @@ class LoginBloc extends Cubit<LoginState> {
 
         Get.snackbar(
           "Login Gagal",
-          errorMessage,
+          "Username atau Password Salah",
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Get.theme.colorScheme.error,
           colorText: Get.theme.colorScheme.onError,
@@ -104,7 +103,7 @@ class LoginBloc extends Cubit<LoginState> {
       // Tampilkan Snackbar error
       Get.snackbar(
         "Terjadi Kesalahan",
-        "Error: $e",
+        "Username atau Password Salah",
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Get.theme.colorScheme.error,
         colorText: Get.theme.colorScheme.onError,

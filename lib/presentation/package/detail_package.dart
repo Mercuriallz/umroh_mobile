@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobile_umroh/constant/widget/bullet_point.dart';
+import 'package:mobile_umroh/constant/widget/convert_to_rupiah.dart';
 import 'package:mobile_umroh/model/package/package_model.dart';
 import 'package:mobile_umroh/presentation/book/add_information_page.dart';
 
@@ -64,7 +65,8 @@ class PackageDetailPage extends StatelessWidget {
                       ),
                       SizedBox(height: 4),
                       Text(
-                        package.harga ?? "",
+                        // package.harga ?? "",
+                        RupiahConverter().formatToRupiah(int.parse(package.harga.toString())),
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.blueAccent,
@@ -127,7 +129,7 @@ class PackageDetailPage extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 14),
                 ),
                 child: const Text(
-                  "Oke, Selesai",
+                  "Tambahkan Detail Kepala Desa",
                   style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
               ),

@@ -1,182 +1,175 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:mobile_umroh/bloc/jemaah/list-jemaah/list_jemaah_bloc.dart';
 import 'package:mobile_umroh/bloc/jemaah/list-jemaah/list_jemaah_state.dart';
+import 'package:mobile_umroh/constant/widget/convert_to_rupiah.dart';
 import 'package:mobile_umroh/presentation/informasi-haji/informaji_haji_detail_page.dart';
 
 class HajiInformationPage extends StatefulWidget {
   const HajiInformationPage({super.key});
 
   @override
-  State<HajiInformationPage> createState() => _HajiInformationPageState();
+  State<HajiInformationPage> createState() => HajiInformationPageState();
 }
 
-class _HajiInformationPageState extends State<HajiInformationPage> {
-  final ScrollController _scrollController = ScrollController();
-  final RefreshController _refreshController = RefreshController(initialRefresh: false);
+class HajiInformationPageState extends State<HajiInformationPage> {
+  int currentPage = 1;
 
   @override
   void initState() {
     super.initState();
-    final bloc = context.read<ListJemaahBloc>();
-    if (bloc.state is! ListJemaahLoaded) {
-      bloc.getListJemaah();
-    }
-    _scrollController.addListener(_onScroll);
+    context.read<ListJemaahBloc>().getListJemaah(page: currentPage);
   }
 
-  void _onScroll() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 100) {
-      context.read<ListJemaahBloc>().loadMoreJemaah();
-    }
-  }
-
-  void _onRefresh() async {
-    context.read<ListJemaahBloc>().getListJemaah();
-    await Future.delayed(Duration(seconds: 1)); // Simulasi loading data
-    _refreshController.refreshCompleted();
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    _refreshController.dispose();
-    super.dispose();
+  void _changePage(int newPage) {
+    setState(() {
+      currentPage = newPage;
+    });
+    context.read<ListJemaahBloc>().getListJemaah(page: currentPage);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Informasi Haji", style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.blueAccent,
-        centerTitle: true,
-      ),
-      body: SmartRefresher(
-        controller: _refreshController,
-        enablePullDown: true,
-        onRefresh: _onRefresh,
-        child: SingleChildScrollView(
-          controller: _scrollController,
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              // Banner
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.blueAccent,
-                  borderRadius: BorderRadius.circular(12),
-                  image: const DecorationImage(
-                    image: AssetImage("assets/images/haji_background.png"),
-                    fit: BoxFit.cover,
-                    opacity: 0.3,
+      backgroundColor: Colors.grey[100],
+      body: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/images/haji_background.png"),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 50),
+                const Text(
+                  "Selamat Datang di Pendaftaran Umroh Desa",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: const [
-                    Text(
-                      "Selamat Datang di Pendaftaran Umroh Desa",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-              // Paket List
-              BlocBuilder<ListJemaahBloc, ListJemaahState>(
+                const SizedBox(height: 20),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: BlocBuilder<ListJemaahBloc, ListJemaahState>(
                 builder: (context, state) {
-                  if (state is ListJemaahLoading && state.dataListJemaah.isEmpty) {
+                  if (state is ListJemaahLoading &&
+                      state.dataListJemaah.isEmpty) {
                     return const Center(child: CircularProgressIndicator());
                   } else if (state is ListJemaahLoaded) {
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: state.jemaah.length,
-                      itemBuilder: (context, index) {
-                        var jemaah = state.jemaah[index];
-                        return Card(
-                          margin: const EdgeInsets.symmetric(vertical: 8),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          elevation: 3,
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  width: 50,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.shade300,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        jemaah.tPaket!.namaPaket!,
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        "Rp. ${jemaah.tPaket!.harga}",
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.blueAccent,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    Get.to(HajiInformationDetailPage(jemaah: jemaah));
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.blueAccent,
-                                    shape: RoundedRectangleBorder(
+                    return Column(
+                      children: [
+                        Text("List Keberangkatan Umroh", style: TextStyle(
+                          fontSize: 24
+                        ),),
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: state.jemaah.length,
+                            itemBuilder: (context, index) {
+                              var jemaah = state.jemaah[index];
+                              return Card(
+                                margin: const EdgeInsets.symmetric(vertical: 8),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12)),
+                                elevation: 4,
+                                child: ListTile(
+                                  contentPadding: const EdgeInsets.all(16),
+                                  leading: Container(
+                                    width: 50,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey.shade300,
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                   ),
-                                  child: const Text("Detail", style: TextStyle(color: Colors.white)),
+                                  title: Text(
+                                    jemaah.tPaket!.namaPaket!,
+                                    style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  subtitle: Text(
+                                    // "Rp. ${jemaah.tPaket!.harga}",
+                                    RupiahConverter().formatToRupiah(int.parse(jemaah.tPaket!.harga.toString())),
+                                    style: const TextStyle(
+                                        fontSize: 14, color: Colors.blueAccent),
+                                  ),
+                                  trailing: ElevatedButton(
+                                    onPressed: () {
+                                      Get.to(HajiInformationDetailPage(
+                                          jemaah: jemaah));
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.blueAccent,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    child: const Text("Detail",
+                                        style: TextStyle(color: Colors.white)),
+                                  ),
                                 ),
-                              ],
-                            ),
+                              );
+                            },
                           ),
-                        );
-                      },
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              IconButton(
+                                onPressed: currentPage > 1
+                                    ? () => _changePage(currentPage - 1)
+                                    : null,
+                                icon: Icon(
+                                  Icons.arrow_back,
+                                  color: currentPage > 1
+                                      ? Colors.blueAccent
+                                      : Colors.grey, // Ubah warna jika disable
+                                ),
+                              ),
+                              Text(
+                                "Halaman $currentPage",
+                                style: const TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                              IconButton(
+                                onPressed: state.jemaah.length == 10
+                                    ? () => _changePage(currentPage + 1)
+                                    : null,
+                                icon: Icon(
+                                  Icons.arrow_forward,
+                                  color: state.jemaah.length == 10
+                                      ? Colors.blueAccent
+                                      : Colors.grey, // Ubah warna jika disable
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     );
                   } else {
-                    return const Center(child: Text("Gagal memuat data"));
+                    return const Center(child: Text("Gagal memuat data."));
                   }
                 },
               ),
-              const SizedBox(height: 20),
-              if (context.watch<ListJemaahBloc>().state is ListJemaahLoading)
-                const Center(child: CircularProgressIndicator()),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

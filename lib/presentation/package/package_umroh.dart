@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:mobile_umroh/bloc/package/package_bloc.dart';
 import 'package:mobile_umroh/bloc/package/package_state.dart';
+import 'package:mobile_umroh/constant/widget/convert_to_rupiah.dart';
 import 'package:mobile_umroh/presentation/package/detail_package.dart';
 
 class HajiRegistrationPage extends StatefulWidget {
@@ -135,7 +136,8 @@ class _HajiRegistrationPageState extends State<HajiRegistrationPage> {
                                                             ),
                                                             const SizedBox(height: 4),
                                                             Text(
-                                                              "Rp. ${package.harga}",
+                                                              // "Rp. ${package.harga}",
+                                                              RupiahConverter().formatToRupiah(int.parse(package.harga.toString())),
                                                               style: const TextStyle(
                                                                 fontSize: 14,
                                                                 color: Colors.blueAccent,

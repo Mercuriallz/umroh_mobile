@@ -35,7 +35,7 @@ class _AddInformationPageState extends State<AddInformationPage> {
   String? selectedSubDistrict;
 
   bool get isFormValid {
-    return nameController.text.isNotEmpty &&
+    return 
         addressController.text.isNotEmpty &&
         phoneNumberController.text.isNotEmpty &&
         kadesNameController.text.isNotEmpty &&
@@ -176,7 +176,6 @@ class _AddInformationPageState extends State<AddInformationPage> {
 
                 const SizedBox(height: 20),
 
-                // Dropdown Kecamatan
                 Text("PILIH KECAMATAN",
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 BlocBuilder<KecamatanBloc, KecamatanState>(
@@ -254,11 +253,10 @@ class _AddInformationPageState extends State<AddInformationPage> {
 
                 const SizedBox(height: 20),
 
-                Text("NAMA", style: TextStyle(fontWeight: FontWeight.bold)),
-                const SizedBox(height: 8),
-                buildTextField("Nama", "Masukkan nama Anda", nameController),
+                // Text("NAMA", style: TextStyle(fontWeight: FontWeight.bold)),
+                // const SizedBox(height: 8),
+                // buildTextField("Nama", "Masukkan nama Anda", nameController),
 
-                const SizedBox(height: 20),
 
                 Text("ALAMAT", style: TextStyle(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 8),
@@ -290,7 +288,7 @@ class _AddInformationPageState extends State<AddInformationPage> {
                         ? () {
                             debugPrint("Submitting form");
                             final formData = {
-                              'name': nameController.text,
+                              // 'name': nameController.text,
                               'address': addressController.text,
                               'kadesName': kadesNameController.text,
                               'phoneNumber': phoneNumberController.text,

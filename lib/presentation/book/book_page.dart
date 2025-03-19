@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_umroh/bloc/jemaah/regist-jemaah/regist_jemaah_bloc.dart';
+import 'package:mobile_umroh/constant/widget/convert_to_rupiah.dart';
 import 'package:mobile_umroh/model/jemaah/regist-jemaah/regist_jemaah_model.dart';
 import 'package:mobile_umroh/model/package/package_model.dart';
 import 'package:mobile_umroh/presentation/book/add_jemaah_page.dart';
@@ -144,7 +145,9 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
                                               ),
                                             ),
                                             Text(
-                                              widget.package.harga ?? "",
+                                              RupiahConverter().formatToRupiah(
+                                                  int.parse(widget.package.harga
+                                                      .toString())),
                                               style: const TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.black,
@@ -204,18 +207,10 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            widget.mainMember["name"] ?? "",
+                                            "Nama Kades: ${widget.mainMember["kadesName"] ?? ""}",
                                             style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Text(
-                                            widget.mainMember["phoneNumber"] ??
-                                                "",
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.grey,
                                             ),
                                           ),
                                         ],
@@ -228,14 +223,25 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
                                           color: Colors.grey,
                                         ),
                                       ),
-                                      const SizedBox(height: 4),
+
+                                      const SizedBox(
+                                        height: 8,
+                                      ),
                                       Text(
-                                        "Kades: ${widget.mainMember["kadesName"] ?? ""}",
+                                        "No. Telephone: ${widget.mainMember["phoneNumber"] ?? ""}",
                                         style: const TextStyle(
                                           fontSize: 14,
                                           color: Colors.grey,
                                         ),
                                       ),
+                                      const SizedBox(height: 4),
+                                      // Text(
+                                      //   "Kades: ${widget.mainMember["kadesName"] ?? ""}",
+                                      //   style: const TextStyle(
+                                      //     fontSize: 14,
+                                      //     color: Colors.grey,
+                                      //   ),
+                                      // ),
                                     ],
                                   ),
                                 ),
@@ -262,7 +268,9 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
                                       const SizedBox(height: 16),
 
                                       // Jemaah list tanpa indeks pertama
-                                      ...jemaahList.asMap().entries
+                                      ...jemaahList
+                                          .asMap()
+                                          .entries
                                           .where((entry) => entry.key != 0)
                                           .map((entry) =>
                                               _buildJemaahCard(entry.value)),
@@ -306,7 +314,6 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
                         bottom: 0,
                         child: InkWell(
                           onTap: () {
-                           
                             var anggotaList = jemaahList
                                 .map((jemaah) => Anggota(
                                       namaAnggota: jemaah["name"],
@@ -332,7 +339,7 @@ class _BookingJemaahPageState extends State<BookingJemaahPage> {
                               namaKades: widget.mainMember["kadesName"] ?? "",
                               noTelp: widget.mainMember["phoneNumber"] ?? "",
                               anggota: anggotaList,
-                            );  
+                            );
 
                             context.read<RegistJemaahBloc>().registJemaah(data);
                             // print(data
