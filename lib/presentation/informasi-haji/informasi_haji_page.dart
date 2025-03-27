@@ -138,7 +138,7 @@ class HajiInformationPageState extends State<HajiInformationPage> {
                                   Icons.arrow_back,
                                   color: currentPage > 1
                                       ? Colors.blueAccent
-                                      : Colors.grey, // Ubah warna jika disable
+                                      : Colors.grey,
                                 ),
                               ),
                               Text(
@@ -154,7 +154,7 @@ class HajiInformationPageState extends State<HajiInformationPage> {
                                   Icons.arrow_forward,
                                   color: state.jemaah.length == 10
                                       ? Colors.blueAccent
-                                      : Colors.grey, // Ubah warna jika disable
+                                      : Colors.grey,
                                 ),
                               ),
                             ],

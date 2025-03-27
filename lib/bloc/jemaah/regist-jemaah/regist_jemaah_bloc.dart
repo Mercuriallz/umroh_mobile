@@ -47,9 +47,9 @@ class RegistJemaahBloc extends Cubit<RegistJemaahState> {
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
-      print("Status Code: ${response.statusCode}, Emit Success State");
-      print("Response data --> ${response.data}");
-      print("Regist data --> $registData");
+      // print("Status Code: ${response.statusCode}, Emit Success State");
+      // print("Response data --> ${response.data}");
+      // print("Regist data --> $registData");
       emit(RegisterJemaahSuccess());
       Get.snackbar(
         "Success",
@@ -62,10 +62,10 @@ class RegistJemaahBloc extends Cubit<RegistJemaahState> {
     } 
   } catch (e) {
     if (e is DioException) {
-      print("Dio Error: ${e.response?.data}");
+      // print("Dio Error: ${e.response?.data}");
       emit(RegisterJemaahError("Dio Error: ${e.response?.data}"));
     } else {
-      print("General Error: ${e.toString()}");
+      // print("General Error: ${e.toString()}");
       emit(RegisterJemaahError("Error: ${e.toString()}"));
     }
   }

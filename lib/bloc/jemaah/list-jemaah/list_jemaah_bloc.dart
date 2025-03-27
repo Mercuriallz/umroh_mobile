@@ -8,10 +8,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ListJemaahBloc extends Cubit<ListJemaahState> {
   ListJemaahBloc() : super(ListJemaahInitial());
 
-  final Dio _dio = Dio();
+  final  dio = Dio();
   int currentPage = 1;
   bool isFetching = false;
-  bool hasMoreData = true; // Menentukan apakah masih ada data untuk halaman berikutnya
+  bool hasMoreData = true; 
   List<DataListJemaah> jemaahList = [];
 
   void getListJemaah({int page = 1}) async {
@@ -19,14 +19,14 @@ class ListJemaahBloc extends Cubit<ListJemaahState> {
     isFetching = true;
 
     if (page == 1) {
-      jemaahList.clear(); // Reset data jika halaman pertama
+      jemaahList.clear(); 
     }
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString("token");
 
     try {
-      final response = await _dio.get(
+      final response = await dio.get(
         "$baseUrl/pendaftaran-umroh?page=$page",
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
@@ -34,9 +34,9 @@ class ListJemaahBloc extends Cubit<ListJemaahState> {
       if (response.statusCode == 200) {
         var listJemaahData = ListJemaahModel.fromJson(response.data).data ?? [];
 
-        hasMoreData = listJemaahData.length == 10; // Jika kurang dari 10, berarti tidak ada halaman berikutnya
+        hasMoreData = listJemaahData.length == 10; 
 
-        jemaahList = listJemaahData; // Simpan hanya data dari halaman ini
+        jemaahList = listJemaahData; 
         emit(ListJemaahLoaded(jemaahList, isLoadingMore: false));
       }
     } catch (e) {
